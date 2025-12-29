@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommended Recipes</title>
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <script src="../static/scripts/scripts.js" defer></script>
+</head>
+<body>
+<div class="hero-banner">
+    <div class="wrapper">
+    <header>
+        <h1 class="recipes-header">Recommended Recipes</h1>
+    </header>
+    <main>
+        <!-- Language Selection Form -->
+        <form method="POST" action="/results">
+            <input type="hidden" name="ingredients" value="{{ request.form.get('ingredients', '') }}">
+            <div class="language-selection">
+            <label for="language">Select Language:</label>
+            <select name="language" id="language">
+                <option value="en" {% if selected_language == 'en' %}selected{% endif %}>English</option>
+                <option value="te" {% if selected_language == 'te' %}selected{% endif %}>Telugu</option>
+                <option value="hi" {% if selected_language == 'hi' %}selected{% endif %}>Hindi</option>
+                <option value="kn" {% if selected_language == 'kn' %}selected{% endif %}>Kannada</option>
+                <option value="ta" {% if selected_language == 'ta' %}selected{% endif %}>Tamil</option>
+                <option value="ml" {% if selected_language == 'ml' %}selected{% endif %}>Malayalam</option>
+
+            </select>
+            <input type="submit" value="Update Language">
+                </div>
+        </form>
+        
+
+        <!-- Recipe List -->
+        <ul class="recipe-list">
+            {% for index, row in recipes.iterrows() %}
+                <li class="recipe">
+                    <div class="recipe-header">
+                        <h2 class="recipe-title">{{ row['title'] }}</h2>
+                        <div class="recipe-image">
+                            <img src="{{ row['image'] }}" alt="{{ row['title'] }}" onclick="openModal({{ index }})">
+                        </div>
+                    </div>
+                    <div class="recipe-details" id="recipe-details-{{ index }}" style="display:none;">
+                        <p>{{ row['description'] }}</p>
+                        <p>Total Time: {{ row['total time'] }}</p>
+                        <p>Ingredients: {{ row['ingredients'] }}</p>
+                        <p><strong>Instructions ({{ selected_language_name }}):</strong></p>
+                        <p>{{ row[instructions_column] }}</p>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </main>
+    </div>
+</div>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <!-- Recipe details will be injected here -->
+    </div>
+</div>
+</body>
+</html>
